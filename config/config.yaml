@@ -1,0 +1,11 @@
+dataset:
+  openml_id: 42178
+  test_size: 0.2
+  random_state: 42
+
+paths:
+  raw_data: "data/raw/telco_churn_raw.csv"
+  interim_data: "data/interim/telco_churn_cleaned.csv"
+  train_data: "data/processed/train.csv"
+  test_data: "data/processed/test.csv"
+  model_path: "models/churn_model.pkl"
