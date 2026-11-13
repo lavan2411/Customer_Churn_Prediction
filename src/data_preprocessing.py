@@ -29,10 +29,11 @@ def inspect_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     if "TotalCharges" in df.columns and "tenure" in df.columns:
         df.loc[(df["tenure"] == 0) & (df["TotalCharges"].isnull()), "TotalCharges"] = 0.0
 
-    for col in df.select_dtypes(include=["number"]).columns:
-        if df[col].isnull().any():
-            df[col] = df[col].fillna(df[col].median())
-            
+# Ensure numeric columns have numeric dtype
+    for col in ["SeniorCitizen", "tenure", "MonthlyCharges", "TotalCharges"]:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
     # Check missing values and fill numeric NaNs with median
     print("\n=== 2. Missing Values Before Cleaning ===")
     missing = df.isnull().sum()
