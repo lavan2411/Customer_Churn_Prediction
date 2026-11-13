@@ -26,9 +26,13 @@ def inspect_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
         df[col] = df[col].astype(str).str.strip()
 
     # Fix incorrect format: TotalCharges has blank spaces -> convert to numeric
-    if "TotalCharges" in df.columns:
-        df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
+    if "TotalCharges" in df.columns and "tenure" in df.columns:
+        df.loc[(df["tenure"] == 0) & (df["TotalCharges"].isnull()), "TotalCharges"] = 0.0
 
+    for col in df.select_dtypes(include=["number"]).columns:
+        if df[col].isnull().any():
+            df[col] = df[col].fillna(df[col].median())
+            
     # Check missing values and fill numeric NaNs with median
     print("\n=== 2. Missing Values Before Cleaning ===")
     missing = df.isnull().sum()
